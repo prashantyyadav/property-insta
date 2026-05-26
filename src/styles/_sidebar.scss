@@ -1,0 +1,693 @@
+// Sidebar & Filter styles
+// ==================== Main Layout ====================
+.ig-main-layout {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 32px 80px;
+  position: relative;
+  z-index: 1;
+}
+
+// ==================== Sidebar Backdrop ====================
+.ig-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 99;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+// ==================== Sidebar — Slide-in panel (hidden by default) ====================
+.ig-sidebar {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 320px;
+  height: calc(100vh - 60px);
+  z-index: 100;
+  transform: translateX(-100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: block;
+
+  &.ig-sidebar--open {
+    transform: translateX(0);
+  }
+}
+
+.ig-sidebar-inner {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--card-bg);
+  border-right: 1px solid var(--ig-border);
+  padding: 16px;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+  scrollbar-width: thin;
+  scrollbar-color: var(--ig-border) transparent;
+
+  &::-webkit-scrollbar { width: 4px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb { background: var(--ig-border); border-radius: 4px; }
+}
+
+// ==================== Filter Card ====================
+.ig-filter-card {
+  background: var(--card-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+// ==================== Filter Header ====================
+.ig-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.ig-filter-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+
+  h3, h4 {
+    font-size: 17px;
+    font-weight: 800;
+    color: var(--ig-text);
+    letter-spacing: -0.3px;
+    margin: 0;
+    line-height: 1;
+  }
+}
+
+.ig-filter-header-icon {
+  color: var(--ig-link);
+  flex-shrink: 0;
+}
+
+.ig-filter-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.ig-filter-count {
+  font-size: 12px;
+  color: var(--ig-text-secondary);
+  font-weight: 600;
+  background: var(--hover-bg);
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.ig-filter-reset {
+  background: none;
+  border: 1.5px solid var(--ig-link);
+  color: var(--ig-link);
+  font-weight: 700;
+  font-size: 12px;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  padding: 5px 12px;
+  border-radius: var(--radius-full);
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  line-height: 1;
+
+  &:hover {
+    background: var(--ig-link);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0,149,246,0.3);
+  }
+}
+
+// ==================== Filter Groups ====================
+.ig-filter-group {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--footer-border);
+  transition: border-color 0.3s ease;
+
+  &:last-child,
+  &.ig-filter-group--last {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.ig-filter-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--ig-text-secondary);
+  letter-spacing: 0.8px;
+  margin-bottom: 12px;
+  line-height: 1;
+}
+
+// ==================== Sort Select ====================
+.ig-sort-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.ig-sort-select {
+  width: 100%;
+  padding: 10px 36px 10px 14px;
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  background: var(--input-bg);
+  color: var(--ig-text);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  appearance: none;
+  line-height: 1.4;
+
+  &:focus {
+    outline: none;
+    border-color: var(--ig-link);
+    box-shadow: 0 0 0 3px rgba(0,149,246,0.08);
+  }
+
+  &:hover { border-color: var(--ig-text-secondary); }
+}
+
+.ig-sort-arrow {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--ig-text-secondary);
+  pointer-events: none;
+  transition: color 0.2s ease;
+}
+
+.ig-sort-select:focus + .ig-sort-arrow {
+  color: var(--ig-link);
+}
+
+// ==================== Price Range ====================
+.ig-price-inputs {
+  display: flex;
+  gap: 10px;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.ig-price-field {
+  flex: 1;
+  min-width: 0; // prevent flex overflow
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ig-price-field-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--ig-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.ig-price-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  transition: all 0.2s ease;
+  background: var(--input-bg);
+  color: var(--ig-text);
+  box-sizing: border-box;
+  line-height: 1.4;
+
+  &:focus {
+    outline: none;
+    border-color: var(--ig-link);
+    box-shadow: 0 0 0 3px rgba(0,149,246,0.08);
+  }
+
+  &:hover { border-color: var(--ig-text-secondary); }
+
+  &::placeholder { color: var(--ig-text-secondary); opacity: 0.6; }
+}
+
+.ig-price-sep {
+  color: var(--ig-text-secondary);
+  font-size: 16px;
+  font-weight: 500;
+  flex-shrink: 0;
+  align-self: flex-end;
+  padding-bottom: 10px; // align with input center
+  line-height: 1.4;
+}
+
+.ig-price-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.ig-price-preset {
+  padding: 6px 10px;
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-full);
+  background: var(--chip-bg);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  color: var(--ig-text-secondary);
+  white-space: nowrap;
+  line-height: 1;
+
+  &:hover {
+    border-color: var(--ig-link);
+    color: var(--ig-link);
+    background: rgba(0,149,246,0.06);
+  }
+
+  &.active {
+    background: var(--ig-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 3px 10px rgba(25,118,210,0.3);
+    font-weight: 700;
+  }
+}
+
+// ==================== Filter Chips (Bedrooms) ====================
+.ig-filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ig-filter-chip {
+  padding: 8px 14px;
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-full);
+  background: var(--chip-bg);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  color: var(--ig-text-secondary);
+  line-height: 1;
+
+  &:hover {
+    border-color: var(--ig-link);
+    color: var(--ig-link);
+    background: rgba(0,149,246,0.06);
+  }
+
+  &.active {
+    background: var(--ig-gradient);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 3px 10px rgba(25,118,210,0.3);
+    font-weight: 700;
+  }
+}
+
+// ==================== Checkbox List ====================
+.ig-checkbox-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ig-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 10px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ig-text);
+  line-height: 1.4;
+
+  &:hover { background: var(--hover-bg); }
+
+  input[type="checkbox"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.ig-checkbox-custom {
+  width: 18px;
+  height: 18px;
+  border: 2px solid var(--ig-border);
+  border-radius: 5px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  background: var(--input-bg);
+
+  svg {
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.15s ease;
+  }
+}
+
+.ig-checkbox-label input:checked + .ig-checkbox-custom {
+  background: var(--ig-gradient);
+  border-color: transparent;
+  box-shadow: 0 2px 6px rgba(25,118,210,0.25);
+
+  svg {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.ig-checkbox-label input:focus-visible + .ig-checkbox-custom {
+  box-shadow: 0 0 0 3px rgba(0,149,246,0.15);
+}
+
+.ig-checkbox-text {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ==================== Quick Actions Card ====================
+.ig-quick-actions-card {
+  background: var(--card-bg);
+  border: 1px solid var(--ig-border);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ig-quick-actions-title {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: var(--ig-text);
+  letter-spacing: -0.2px;
+  line-height: 1;
+}
+
+.ig-quick-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.ig-quick-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--ig-border);
+  background: var(--hover-bg);
+  border-radius: var(--radius);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: 'Inter', sans-serif;
+  color: var(--ig-text);
+  line-height: 1.2;
+  white-space: nowrap;
+
+  &:hover {
+    background: var(--ig-gradient);
+    color: white;
+    border-color: transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(25,118,210,0.25);
+  }
+
+  &:active { transform: translateY(0); }
+
+  .ig-quick-action-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+}
+
+// ==================== Compact Filter Sidebar (Buttons-Only Mode) ====================
+.ig-sidebar--compact {
+  
+  .ig-filter-card--compact {
+    padding: 14px 18px;
+  }
+  
+  .ig-filter-header--compact {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--ig-border);
+    
+    .ig-filter-header-icon {
+      color: var(--ig-link);
+      flex-shrink: 0;
+    }
+    
+    .ig-filter-header-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--ig-text);
+      letter-spacing: -0.3px;
+      line-height: 1;
+    }
+    
+    .ig-filter-count {
+      font-size: 11px;
+      color: var(--ig-text-secondary);
+      font-weight: 600;
+      background: var(--hover-bg);
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      white-space: nowrap;
+    }
+    
+    .ig-filter-reset {
+      background: none;
+      border: 1.5px solid var(--ig-link);
+      color: var(--ig-link);
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      padding: 4px 10px;
+      border-radius: var(--radius-full);
+      transition: all 0.2s ease;
+      white-space: nowrap;
+      line-height: 1;
+      
+      &:hover {
+        background: var(--ig-link);
+        color: white;
+        box-shadow: 0 2px 8px rgba(0,149,246,0.3);
+      }
+    }
+    
+    .ig-filter-close {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: none;
+      background: var(--hover-bg);
+      color: var(--ig-text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      flex-shrink: 0;
+      margin-left: auto;
+      
+      &:hover {
+        background: var(--ig-danger);
+        color: white;
+      }
+    }
+  }
+  
+  .ig-filter-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 10px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  .ig-filter-chip-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ig-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    padding-top: 8px;
+    min-width: 55px;
+    flex-shrink: 0;
+    line-height: 1;
+  }
+  
+  .ig-sort-select-wrapper--compact {
+    flex: 1;
+    min-width: 0;
+    max-width: 200px;
+  }
+  
+  .ig-sort-select--compact {
+    width: 100%;
+    padding: 7px 30px 7px 10px;
+    border: 1px solid var(--ig-border);
+    border-radius: var(--radius-full);
+    font-size: 12px;
+    font-weight: 600;
+    font-family: 'Inter', sans-serif;
+    background: var(--chip-bg);
+    color: var(--ig-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    appearance: none;
+    line-height: 1.4;
+    
+    &:focus {
+      outline: none;
+      border-color: var(--ig-link);
+      box-shadow: 0 0 0 2px rgba(0,149,246,0.1);
+    }
+    
+    &:hover { border-color: var(--ig-text-secondary); }
+  }
+  
+  .ig-filter-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+  }
+  
+  .ig-filter-chip {
+    padding: 6px 11px;
+    border: 1px solid var(--ig-border);
+    border-radius: var(--radius-full);
+    background: var(--chip-bg);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    color: var(--ig-text-secondary);
+    line-height: 1;
+    white-space: nowrap;
+    
+    &:hover {
+      border-color: var(--ig-link);
+      color: var(--ig-link);
+      background: rgba(0,149,246,0.06);
+    }
+    
+    &.active {
+      background: var(--ig-gradient);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 3px 10px rgba(25,118,210,0.3);
+      font-weight: 700;
+    }
+  }
+}
+
+// ==================== Responsive: Tablet (768-1023px) ====================
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ig-sidebar { width: 280px; }
+  .ig-main-layout { padding: 16px 16px 80px; }
+  .ig-filter-card { padding: 18px; }
+  .ig-quick-actions-card { padding: 16px; }
+  .ig-quick-actions-grid { grid-template-columns: 1fr; }
+  .ig-filter-header-left h3,
+  .ig-filter-header-left h4 { font-size: 15px; }
+}
+
+// ==================== Responsive: Mobile (≤767px) ====================
+@media (max-width: 767px) {
+  .ig-sidebar {
+    width: 100%;
+    top: 48px;
+    height: calc(100vh - 48px);
+  }
+
+  .ig-sidebar-inner { padding: 14px; }
+
+  .ig-main-layout {
+    padding: 12px 12px 80px;
+  }
+
+  .ig-feed { max-width: 100%; }
+}
+
+// ==================== Responsive: Small Mobile (≤480px) ====================
+@media (max-width: 480px) {
+  .ig-sidebar-inner { padding: 12px; }
+
+  .ig-filter-card { padding: 16px; }
+  .ig-filter-header-left h3,
+  .ig-filter-header-left h4 { font-size: 15px; }
+  .ig-filter-label { font-size: 10px; margin-bottom: 10px; }
+  .ig-price-input { padding: 8px 10px; font-size: 12px; }
+  .ig-price-preset { padding: 5px 8px; font-size: 10px; }
+  .ig-filter-chip { padding: 6px 10px; font-size: 11px; }
+  .ig-checkbox-label { padding: 6px 8px; font-size: 12px; gap: 8px; }
+  .ig-checkbox-custom { width: 16px; height: 16px; }
+  .ig-quick-actions-card { padding: 14px; }
+  .ig-quick-actions-grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+  .ig-quick-action { padding: 8px 10px; font-size: 11px; }
+}
+
+// ==================== Responsive: Large Desktop (≥1200px) ====================
+@media (min-width: 1200px) {
+  .ig-main-layout { padding: 24px 32px 80px; }
+}

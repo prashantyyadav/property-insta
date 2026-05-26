@@ -1,0 +1,175 @@
+// Map View styles
+.ig-map-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--ig-border);
+
+  h3 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ig-text);
+    margin-bottom: 12px;
+  }
+}
+
+.ig-map-controls {
+  select {
+    padding: 8px 14px;
+    border: 1px solid var(--ig-border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'Inter', sans-serif;
+    background: var(--input-bg);
+    color: var(--ig-text);
+    cursor: pointer;
+
+    &:focus { outline: none; border-color: var(--ig-link); }
+  }
+}
+
+.ig-map-container {
+  position: relative;
+  height: 500px;
+  background: var(--muted-bg);
+  border-radius: var(--radius-lg);
+  margin: 16px;
+  overflow: hidden;
+}
+
+.ig-map-placeholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--ig-text-secondary);
+
+  svg { opacity: 0.3; }
+
+  p {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ig-text);
+  }
+}
+
+.map-hint {
+  font-size: 13px;
+  color: var(--ig-text-secondary);
+}
+
+.ig-map-pins {
+  position: absolute;
+  inset: 0;
+}
+
+.ig-map-pin {
+  position: absolute;
+  cursor: pointer;
+  z-index: 2;
+  transition: var(--transition-fast);
+
+  &.selected { z-index: 10; }
+}
+
+.ig-map-pin-dot {
+  display: block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--ig-gradient);
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: var(--transition-fast);
+
+  .ig-map-pin:hover &,
+  .ig-map-pin.selected & {
+    transform: scale(1.3);
+    box-shadow: 0 3px 10px rgba(0,0,0,0.4);
+  }
+}
+
+.ig-map-pin-card {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: fadeIn 0.2s ease;
+
+  img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+  }
+}
+
+.ig-map-pin-info {
+  padding: 10px;
+
+  strong {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ig-text);
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  span {
+    font-size: 13px;
+    color: var(--ig-accent);
+    font-weight: 600;
+    display: block;
+    margin-bottom: 8px;
+  }
+}
+
+.map-view-detail-btn {
+  padding: 6px 12px;
+  background: var(--ig-gradient);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition-fast);
+
+  &:hover { box-shadow: 0 2px 8px rgba(25,118,210,0.3); }
+}
+
+// ==================== Responsive Map ====================
+@media (max-width: 1023px) {
+  .ig-map-container { height: 400px; }
+  .ig-map-pin-card { width: 200px; }
+}
+
+@media (max-width: 767px) {
+  .ig-map-header { padding: 16px; h3 { font-size: 18px; } }
+  .ig-map-container { height: 300px; margin: 12px; }
+  .ig-map-pin-card { width: 180px; }
+  .ig-map-pin-card img { height: 80px; }
+  .ig-map-pin-info { padding: 8px; }
+  .ig-map-pin-info strong { font-size: 13px; }
+  .ig-map-pin-info span { font-size: 12px; }
+  .ig-map-placeholder p { font-size: 16px; }
+  .ig-map-controls select { padding: 6px 10px; font-size: 12px; }
+}
+
+@media (max-width: 480px) {
+  .ig-map-header { padding: 12px; h3 { font-size: 16px; } }
+  .ig-map-container { height: 240px; margin: 8px; }
+  .ig-map-pin-card { width: 160px; }
+  .ig-map-pin-card img { height: 70px; }
+  .ig-map-pin-info strong { font-size: 12px; }
+  .ig-map-pin-info span { font-size: 11px; }
+  .ig-map-placeholder p { font-size: 14px; }
+  .map-hint { font-size: 12px; }
+  .map-view-detail-btn { padding: 5px 10px; font-size: 11px; }
+}

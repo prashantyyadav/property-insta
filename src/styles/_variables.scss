@@ -1,0 +1,99 @@
+// ==========================================
+// PropertyInsta - SCSS Variables & Theming
+// ==========================================
+//
+// Responsive Breakpoints (used across all partials):
+//   Mobile Small:  ≤ 480px  (@media (max-width: 480px))
+//   Mobile:        ≤ 767px  (@media (max-width: 767px))
+//   Tablet:        768–1023px (@media (min-width: 768px) and (max-width: 1023px))
+//   Desktop:       ≥ 1024px
+//   Large:         ≥ 1200px
+// ==========================================
+
+// Light mode — 99acres theme
+:root {
+  --ig-bg: #f5f7fa;
+  --ig-white: #ffffff;
+  --ig-border: #e0e4ea;
+  --ig-text: #1a1a2e;
+  --ig-text-secondary: #6b7280;
+  --ig-link: #1976d2;
+  --ig-danger: #ff2d55;
+  --ig-success: #2e7d32;
+  --ig-warning: #ff6d00;
+  --ig-accent: #ff6d00;
+
+  --ig-gradient: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+  --ig-gradient-warm: linear-gradient(135deg, #ff6d00 0%, #e65100 100%);
+  --ig-gradient-cool: linear-gradient(135deg, #0288d1 0%, #1976d2 50%, #0d47a1 100%);
+  --ig-gradient-green: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
+  --ig-gradient-accent: linear-gradient(135deg, #1976d2 0%, #ff6d00 100%);
+
+  --glass: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.6);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.16);
+
+  --radius-sm: 4px;
+  --radius: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+
+  --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: all 0.15s ease;
+
+  --card-bg: #ffffff;
+  --card-border: #e0e4ea;
+  --hover-bg: rgba(25, 118, 210, 0.04);
+  --overlay-bg: rgba(0, 0, 0, 0.02);
+  --chip-bg: #ffffff;
+  --stat-bg: #f0f4f8;
+  --footer-border: rgba(0, 0, 0, 0.06);
+  --muted-bg: rgba(0, 0, 0, 0.03);
+  --input-bg: #ffffff;
+  --badge-bg: rgba(25, 118, 210, 0.08);
+}
+
+// Dark mode
+body.dark {
+  --ig-bg: #0d1117;
+  --ig-white: #161b22;
+  --ig-border: #30363d;
+  --ig-text: #e6edf3;
+  --ig-text-secondary: #8b949e;
+  --ig-link: #58a6ff;
+  --ig-danger: #f85149;
+  --ig-success: #3fb950;
+  --ig-warning: #d2991d;
+  --ig-accent: #ff6d00;
+
+  --glass: rgba(22, 27, 34, 0.94);
+  --glass-border: rgba(48, 54, 61, 0.7);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.6);
+  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.7);
+
+  --card-bg: #161b22;
+  --card-border: #30363d;
+  --hover-bg: rgba(88, 166, 255, 0.06);
+  --overlay-bg: rgba(255, 255, 255, 0.02);
+  --chip-bg: #161b22;
+  --stat-bg: rgba(255, 255, 255, 0.04);
+  --footer-border: rgba(255, 255, 255, 0.08);
+  --muted-bg: rgba(255, 255, 255, 0.04);
+  --input-bg: #161b22;
+  --badge-bg: rgba(88, 166, 255, 0.1);
+
+  --ig-gradient: linear-gradient(135deg, #58a6ff 0%, #3b82f6 100%);
+  --ig-gradient-warm: linear-gradient(135deg, #d2991d 0%, #ff6d00 100%);
+  --ig-gradient-cool: linear-gradient(135deg, #58a6ff 0%, #3b82f6 50%, #1d4ed8 100%);
+  --ig-gradient-green: linear-gradient(135deg, #3fb950 0%, #2e7d32 100%);
+  --ig-gradient-accent: linear-gradient(135deg, #58a6ff 0%, #d2991d 100%);
+}
+
+// Fonts
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap');

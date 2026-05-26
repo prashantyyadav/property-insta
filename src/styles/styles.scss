@@ -1,0 +1,15 @@
+// PropertyInsta - Main SCSS Entry
+// Imports all style partials
+
+@use 'variables';
+@use 'globals';
+@use 'header';
+@use 'hero';
+@use 'feed';
+@use 'sidebar';
+@use 'reels';
+@use 'modals';
+@use 'saved';
+@use 'blog';
+@use 'map';
+@use 'footer';
