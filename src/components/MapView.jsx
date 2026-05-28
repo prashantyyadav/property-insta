@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { allProperties, formatPriceIndian } from '../data';
+import { formatPriceIndian } from '../data';
 
 export default function MapView() {
-  const { addRecentView, setActiveModal } = useApp();
+  const { allProperties, addRecentView, setActiveModal } = useApp();
   const [mapFilter, setMapFilter] = useState('all');
   const [selectedProp, setSelectedProp] = useState(null);
 
@@ -48,38 +48,54 @@ export default function MapView() {
         <div className="ig-map-pins">
           {filtered.map((prop, idx) => {
             const top = 25 + (idx % 5) * 15 + Math.random() * 5;
-            const left = 10 + (idx % 6) * 15 + Math.random() * 5;
+            const left = 15 + Math.floor(idx / 5) * 16 + Math.random() * 5;
             return (
-              <div
+              <button
                 key={prop.id}
-                className={`ig-map-pin ${selectedProp === prop.id ? 'selected' : ''}`}
+                className={`ig-map-pin ${selectedProp?.id === prop.id ? 'active' : ''}`}
                 style={{ top: `${top}%`, left: `${left}%` }}
-                onClick={() => setSelectedProp(selectedProp === prop.id ? null : prop.id)}
+                onClick={() => {
+                  setSelectedProp(prop);
+                  addRecentView(prop.id);
+                }}
+                title={`${prop.title} – ${formatPriceIndian(prop.price)}`}
               >
-                <span className="ig-map-pin-dot" />
-                {selectedProp === prop.id && (
-                  <div className="ig-map-pin-card">
-                    <img src={prop.media?.[0]} alt={prop.title} />
-                    <div className="ig-map-pin-info">
-                      <strong>{prop.title}</strong>
-                      <span>{formatPriceIndian(prop.price)}</span>
-                      <button
-                        className="map-view-detail-btn"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          addRecentView(prop.id);
-                          setActiveModal({ type: 'property', data: { propertyId: prop.id } });
-                        }}
-                      >
-                        View Details →
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 010-5 2.5 2.5 0 010 5z" /></svg>
+              </button>
             );
           })}
         </div>
+
+        {/* Selected Property Card */}
+        {selectedProp && (
+          <div className="ig-map-selected">
+            <div className="ig-map-selected-inner">
+              <div className="ig-map-selected-media">
+                {selectedProp.media && selectedProp.media.length > 0 ? (
+                  <img src={selectedProp.media[0]} alt={selectedProp.title} />
+                ) : (
+                  <div className="ig-card-img-fallback" style={{ height: 120 }}>No Image</div>
+                )}
+              </div>
+              <div className="ig-map-selected-info">
+                <h4>{selectedProp.title}</h4>
+                <p className="ig-card-location">{selectedProp.location}</p>
+                <p className="ig-card-price">{formatPriceIndian(selectedProp.price)}</p>
+                <div className="ig-card-specs">
+                  {selectedProp.bedrooms && <span>{selectedProp.bedrooms} BHK</span>}
+                  {selectedProp.bathrooms && <span>{selectedProp.bathrooms} Bath</span>}
+                  {selectedProp.area && <span>{selectedProp.area} sq.ft</span>}
+                </div>
+                <button
+                  className="ig-load-more-btn"
+                  onClick={() => setActiveModal({ type: 'property', data: { propertyId: selectedProp.id } })}
+                >
+                  View Details →
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

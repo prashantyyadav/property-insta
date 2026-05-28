@@ -1,4 +1,5 @@
 import { AppProvider, useApp } from './context/AppContext';
+import { AuthProvider } from './context/AuthContext';
 import Header from './components/Header';
 import HeroBanner from './components/HeroBanner';
 import FeedView from './components/FeedView';
@@ -60,8 +61,10 @@ function AppLayout() {
 
 export default function App() {
   return (
-    <AppProvider>
-      <AppLayout />
-    </AppProvider>
+    <AuthProvider>
+      <AppProvider>
+        <AppLayout />
+      </AppProvider>
+    </AuthProvider>
   );
 }

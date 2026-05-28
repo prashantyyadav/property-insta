@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '../context/AppContext';
+import { useAuth } from '../context/AuthContext';
 import {
-  allProperties,
   propertyStories,
   propertyReviews,
   quizQuestions,
@@ -75,7 +75,7 @@ function StoryModal() {
 
 // ==================== Property Detail Modal ====================
 function PropertyDetailModal() {
-  const { activeModal, setActiveModal, savedIds, toggleSave, compareIds, toggleCompare, likedIds, toggleLike, addRecentView } = useApp();
+  const { activeModal, setActiveModal, savedIds, toggleSave, compareIds, toggleCompare, likedIds, toggleLike, addRecentView, allProperties } = useApp();
   const { propertyId } = activeModal.data || {};
   const [activeImg, setActiveImg] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
@@ -747,7 +747,7 @@ function ROIModal() {
 
 // ==================== Reviews Modal ====================
 function ReviewsModal() {
-  const { activeModal, setActiveModal } = useApp();
+  const { activeModal, setActiveModal, allProperties } = useApp();
   const { propertyId } = activeModal.data || {};
   const [rating, setRating] = useState(0);
   const [comment, setComment] = useState('');
@@ -893,7 +893,7 @@ function CurrencyModal() {
 
 // ==================== Compare Modal ====================
 function CompareModal() {
-  const { setActiveModal, compareIds, toggleCompare } = useApp();
+  const { setActiveModal, compareIds, toggleCompare, allProperties } = useApp();
 
   const compareProps = allProperties.filter(p => compareIds.includes(p.id));
 
@@ -965,7 +965,7 @@ function CompareModal() {
 
 // ==================== Agent Profile Modal ====================
 function AgentModal() {
-  const { activeModal, setActiveModal } = useApp();
+  const { activeModal, setActiveModal, allProperties } = useApp();
   const { agentId } = activeModal.data || {};
 
   const agent = agents[agentId];
@@ -1041,6 +1041,233 @@ function AgentModal() {
   );
 }
 
+// ==================== Admin Panel Modal ====================
+function AdminPanelModal() {
+  const { user, signIn, signOut } = useAuth();
+  const { allProperties, adminAddProperty, adminDeleteProperty, dbReady } = useApp();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [authError, setAuthError] = useState('');
+  const [authLoading, setAuthLoading] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [form, setForm] = useState({
+    title: '', location: '', price: '', beds: 2, baths: 2, sqft: 1000,
+    type: 'apartment', status: 'sale', builder: '', description: '',
+    images: '', featured: false, hot: false, agent_name: '',
+  });
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setAuthError('');
+    setAuthLoading(true);
+    try {
+      await signIn(email, password);
+    } catch (err) {
+      setAuthError(err.message);
+    } finally {
+      setAuthLoading(false);
+    }
+  };
+
+  const handleAddProperty = async (e) => {
+    e.preventDefault();
+    try {
+      const images = form.images
+        ? form.images.split(',').map(s => s.trim()).filter(Boolean)
+        : ['https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=600&h=400&fit=crop'];
+      await adminAddProperty({
+        ...form,
+        price: Number(form.price),
+        beds: Number(form.beds),
+        baths: Number(form.baths),
+        sqft: Number(form.sqft),
+        images,
+        amenities: [],
+        agent: { name: form.agent_name || 'Admin Agent', avatar: 'https://i.pravatar.cc/150?img=3', rating: 4.5, sales: 10 },
+      });
+      setForm({ title: '', location: '', price: '', beds: 2, baths: 2, sqft: 1000, type: 'apartment', status: 'sale', builder: '', description: '', images: '', featured: false, hot: false, agent_name: '' });
+      setShowForm(false);
+      alert('Property added! Changes will appear in real-time.');
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
+  const handleDelete = async (id, title) => {
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+    try {
+      await adminDeleteProperty(id);
+    } catch (err) {
+      alert('Error: ' + err.message);
+    }
+  };
+
+  return (
+    <div className="prop-modal-backdrop" onClick={() => {}}>
+      <div className="admin-panel-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 800, maxHeight: '90vh', overflow: 'auto' }}>
+        <div className="modal-header" style={{ position: 'sticky', top: 0, background: 'var(--bg-primary)', zIndex: 1 }}>
+          <h3>🛠️ Admin Panel {!dbReady && '(Supabase not configured)'}</h3>
+          {user && (
+            <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+              <span style={{ fontSize: '0.85rem', opacity: 0.7 }}>{user.email}</span>
+              <button className="modal-close" onClick={signOut} style={{ position: 'static' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" /><polyline points="16 17 21 12 16 7" /><line x1="21" y1="12" x2="9" y2="12" /></svg>
+              </button>
+            </div>
+          )}
+        </div>
+
+        <div style={{ padding: '1.5rem' }}>
+          {!dbReady && (
+            <div style={{ padding: '1rem', background: '#fff3cd', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.9rem' }}>
+              ⚠️ Supabase is not configured. Set <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code> in your <code>.env</code> file.
+              Currently using static data from <code>src/data.js</code>.
+            </div>
+          )}
+
+          {!user ? (
+            <form onSubmit={handleLogin} style={{ maxWidth: 400 }}>
+              <h4 style={{ marginBottom: '1rem' }}>Admin Login</h4>
+              {authError && <div style={{ color: '#dc3545', marginBottom: '0.75rem', fontSize: '0.9rem' }}>{authError}</div>}
+              <div className="roi-field">
+                <label>Email</label>
+                <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="admin@example.com" />
+              </div>
+              <div className="roi-field">
+                <label>Password</label>
+                <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required placeholder="••••••••" />
+              </div>
+              <button type="submit" className="mortgage-calc-btn" disabled={authLoading} style={{ width: '100%', marginTop: '0.5rem' }}>
+                {authLoading ? 'Logging in...' : 'Login'}
+              </button>
+              <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', opacity: 0.6 }}>
+                Create admin users in Supabase Dashboard → Authentication → Users → Add User.
+              </p>
+            </form>
+          ) : (
+            <>
+              {/* Add Property Form */}
+              <div style={{ marginBottom: '1.5rem' }}>
+                <button className="mortgage-calc-btn" onClick={() => setShowForm(!showForm)} style={{ marginBottom: '0.75rem' }}>
+                  {showForm ? '✕ Cancel' : '+ Add New Property'}
+                </button>
+                {showForm && (
+                  <form onSubmit={handleAddProperty} className="roi-form" style={{ background: 'var(--bg-secondary)', padding: '1rem', borderRadius: '8px' }}>
+                    <div className="roi-form-grid">
+                      <div className="roi-field">
+                        <label>Title *</label>
+                        <input type="text" value={form.title} onChange={(e) => setForm({...form, title: e.target.value})} required />
+                      </div>
+                      <div className="roi-field">
+                        <label>Location *</label>
+                        <input type="text" value={form.location} onChange={(e) => setForm({...form, location: e.target.value})} required />
+                      </div>
+                      <div className="roi-field">
+                        <label>Price (₹) *</label>
+                        <input type="number" value={form.price} onChange={(e) => setForm({...form, price: e.target.value})} required />
+                      </div>
+                      <div className="roi-field">
+                        <label>Beds</label>
+                        <input type="number" value={form.beds} onChange={(e) => setForm({...form, beds: e.target.value})} />
+                      </div>
+                      <div className="roi-field">
+                        <label>Baths</label>
+                        <input type="number" value={form.baths} onChange={(e) => setForm({...form, baths: e.target.value})} />
+                      </div>
+                      <div className="roi-field">
+                        <label>Sq.Ft</label>
+                        <input type="number" value={form.sqft} onChange={(e) => setForm({...form, sqft: e.target.value})} />
+                      </div>
+                      <div className="roi-field">
+                        <label>Type</label>
+                        <select value={form.type} onChange={(e) => setForm({...form, type: e.target.value})}>
+                          <option value="apartment">Apartment</option>
+                          <option value="villa">Villa</option>
+                          <option value="commercial">Commercial</option>
+                          <option value="plot">Plot</option>
+                        </select>
+                      </div>
+                      <div className="roi-field">
+                        <label>Status</label>
+                        <select value={form.status} onChange={(e) => setForm({...form, status: e.target.value})}>
+                          <option value="sale">For Sale</option>
+                          <option value="rent">For Rent</option>
+                        </select>
+                      </div>
+                      <div className="roi-field">
+                        <label>Builder</label>
+                        <input type="text" value={form.builder} onChange={(e) => setForm({...form, builder: e.target.value})} />
+                      </div>
+                      <div className="roi-field">
+                        <label>Agent Name</label>
+                        <input type="text" value={form.agent_name} onChange={(e) => setForm({...form, agent_name: e.target.value})} />
+                      </div>
+                      <div className="roi-field">
+                        <label>Image URLs (comma-separated)</label>
+                        <input type="text" value={form.images} onChange={(e) => setForm({...form, images: e.target.value})} placeholder="https://..." />
+                      </div>
+                      <div className="roi-field" style={{ gridColumn: '1 / -1' }}>
+                        <label>Description</label>
+                        <textarea rows={2} value={form.description} onChange={(e) => setForm({...form, description: e.target.value})} />
+                      </div>
+                      <div className="roi-field" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                          <input type="checkbox" checked={form.featured} onChange={(e) => setForm({...form, featured: e.target.checked})} />
+                          Featured
+                        </label>
+                        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                          <input type="checkbox" checked={form.hot} onChange={(e) => setForm({...form, hot: e.target.checked})} />
+                          Hot Deal
+                        </label>
+                      </div>
+                    </div>
+                    <button type="submit" className="mortgage-calc-btn" style={{ marginTop: '0.5rem' }}>Add Property</button>
+                  </form>
+                )}
+              </div>
+
+              {/* Property List */}
+              <h4>Manage Properties ({allProperties.length} total)</h4>
+              <div style={{ maxHeight: 400, overflow: 'auto', marginTop: '0.5rem' }}>
+                <table className="compare-table" style={{ fontSize: '0.85rem' }}>
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Title</th>
+                      <th>Price</th>
+                      <th>Location</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {allProperties.slice(0, 50).map(p => (
+                      <tr key={p.id}>
+                        <td>{p.id}</td>
+                        <td style={{ maxWidth: 200, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.title}</td>
+                        <td>₹{(p.price / 100000).toFixed(1)}L</td>
+                        <td style={{ maxWidth: 150, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.location}</td>
+                        <td>
+                          <button
+                            className="compare-remove"
+                            onClick={() => handleDelete(p.id, p.title)}
+                            style={{ margin: 0 }}
+                          >
+                            🗑️
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ==================== Main Modals Component ====================
 export default function Modals() {
   const { activeModal, setActiveModal } = useApp();
@@ -1071,6 +1298,7 @@ export default function Modals() {
       {type === 'currency' && <CurrencyModal />}
       {type === 'compare' && <CompareModal />}
       {type === 'agent' && <AgentModal />}
+      {type === 'admin' && <AdminPanelModal />}
     </>
   );
 }
