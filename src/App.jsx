@@ -13,7 +13,7 @@ import Footer, { MobileNav, ChatWidget } from './components/Footer';
 import './styles/styles.scss';
 
 function AppLayout() {
-  const { currentView, darkMode } = useApp();
+  const { currentView, darkMode, dbDiag, allProperties } = useApp();
 
   const renderView = () => {
     switch (currentView) {
@@ -46,8 +46,25 @@ function AppLayout() {
     }
   };
 
+  // DIAGNOSTIC: show Supabase connection state
+  const diagBg = dbDiag.status === 'success' ? '#059669' : dbDiag.status === 'error' || dbDiag.status === 'exception' ? '#dc2626' : dbDiag.status === 'connecting' ? '#d97706' : '#6b7280';
+
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>
+      {/* DIAGNOSTIC BANNER */}
+      <div style={{
+        background: diagBg, color: '#fff', padding: '8px 16px', fontSize: '12px',
+        fontFamily: 'monospace', textAlign: 'center', position: 'sticky', top: 0, zIndex: 9999,
+        display: 'flex', justifyContent: 'center', gap: '24px', flexWrap: 'wrap'
+      }}>
+        <span>STATUS: <b>{dbDiag.status}</b></span>
+        <span>URL: {dbDiag.url || '—'}</span>
+        <span>RAW: <b>{dbDiag.raw}</b></span>
+        <span>MAPPED: <b>{dbDiag.mapped}</b></span>
+        <span>MERGED: <b>{dbDiag.merged}</b></span>
+        <span>TOTAL: <b>{allProperties.length}</b></span>
+        {dbDiag.error && <span style={{color:'#fca5a5'}}>ERR: {dbDiag.error}</span>}
+      </div>
       <Header />
       {currentView === 'feed' && <HeroBanner />}
       {renderView()}
