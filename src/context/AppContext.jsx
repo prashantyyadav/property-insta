@@ -116,8 +116,6 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   // Supabase availability flag
   const [dbReady, setDbReady] = useState(false);
-  // Diagnostic state
-  const [dbDiag, setDbDiag] = useState({ rawCount: 0, mappedCount: 0, mergedCount: 0, error: null });
 
   // View management
   const [currentView, setCurrentView] = useState('feed');
@@ -155,16 +153,10 @@ export function AppProvider({ children }) {
         }
 
         if (!propsErr && props) {
-          const rawCount = props.length;
-          console.log('[PropertyInsta] Raw Supabase properties count:', rawCount);
-          console.log('[PropertyInsta] Raw Supabase IDs:', props.map(p => p.id).join(', '));
+          console.log('[PropertyInsta] Loaded ' + props.length + ' properties from Supabase');
           const mapped = props.map(mapDBProperty);
-          const merged = mergeWithStatic(mapped, staticProperties);
-          console.log('[PropertyInsta] After map:', mapped.length, 'After merge:', merged.length);
-          console.log('[PropertyInsta] Merged IDs:', merged.map(p => p.id).join(', '));
-          setAllProperties(merged);
+          setAllProperties(mergeWithStatic(mapped, staticProperties));
           setDbReady(true);
-          setDbDiag({ rawCount, mappedCount: mapped.length, mergedCount: merged.length, error: null });
         }
         if (!reelsErr && reels) {
           console.log('[PropertyInsta] Loaded ' + reels.length + ' reels from Supabase');
@@ -477,7 +469,7 @@ export function AppProvider({ children }) {
     filters, setFilters,
     filteredProperties, displayedProperties,
     allProperties, allReels,
-    dbReady, dbDiag,
+    dbReady,
     currentPage, loadMore, hasMore, filteredCount,
     savedIds, toggleSave,
     likedIds, toggleLike,

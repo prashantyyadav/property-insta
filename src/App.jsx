@@ -13,7 +13,7 @@ import Footer, { MobileNav, ChatWidget } from './components/Footer';
 import './styles/styles.scss';
 
 function AppLayout() {
-  const { currentView, darkMode, allProperties, dbReady, dbDiag } = useApp();
+  const { currentView, darkMode } = useApp();
 
   const renderView = () => {
     switch (currentView) {
@@ -48,15 +48,6 @@ function AppLayout() {
 
   return (
     <div className={`app-root ${darkMode ? 'dark' : ''}`}>
-      {/* DIAGNOSTIC — will be removed once issue is resolved */}
-      <div style={{background:'#1a1a2e',color:'#fff',padding:'6px 16px',fontSize:'12px',display:'flex',gap:'16px',justifyContent:'center',fontFamily:'monospace',flexWrap:'wrap'}}>
-        <span>DB: <b style={{color: dbReady ? '#4ade80' : '#f87171'}}>{dbReady ? 'CONNECTED' : 'WAITING'}</b></span>
-        <span>RAW: <b>{dbDiag.rawCount}</b></span>
-        <span>MAPPED: <b>{dbDiag.mappedCount}</b></span>
-        <span>MERGED: <b>{dbDiag.mergedCount}</b></span>
-        <span>STATE: <b>{allProperties.length}</b></span>
-        {dbDiag.error && <span style={{color:'#f87171'}}>ERR: {dbDiag.error}</span>}
-      </div>
       <Header />
       {currentView === 'feed' && <HeroBanner />}
       {renderView()}
