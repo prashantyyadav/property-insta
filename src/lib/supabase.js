@@ -1,19 +1,27 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+// Hardcoded fallbacks so the frontend works on Vercel without manual env var setup.
+// The anon key is safe to expose — it's meant for client-side use.
+const SUPABASE_URL = 'https://ioblbfugnhtghvxbyeos.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlvYmxiZnVnbmh0Z2h2eGJ5ZW9zIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk5NTM2NzcsImV4cCI6MjA5NTUyOTY3N30.fyCOdUh5M4x4KeLaEG6Apsfe6U2AvT0acm1a5_JSBQA';
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || SUPABASE_URL;
+const supabaseAnonKey =
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
   console.warn(
-    'Supabase environment variables (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY) not set. ' +
+    'Supabase environment variables (VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY / VITE_SUPABASE_PUBLISHABLE_KEY) not set. ' +
     'Falling back to static data from src/data.js. ' +
-    'Set these in your .env file for production use.'
+    'Set these in your .env.local file for production use.'
   );
 }
 
 /**
  * Supabase client instance.
- * Uses the anonymous key for public reads and authenticated writes.
+ * Uses the publishable (anon) key for public reads and authenticated writes.
  * Row-Level Security (RLS) policies on the properties table enforce:
  *  - Anyone can SELECT (read)
  *  - Only authenticated users can INSERT/UPDATE/DELETE
