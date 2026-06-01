@@ -116,6 +116,9 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
   // Supabase availability flag
   const [dbReady, setDbReady] = useState(false);
+  // Debug status for visible banner
+  const [dbStatus, setDbStatus] = useState('connecting'); // 'connecting' | 'connected' | 'error' | 'no-supabase'
+  const [dbMsg, setDbMsg] = useState('');
 
   // View management
   const [currentView, setCurrentView] = useState('feed');
@@ -130,6 +133,8 @@ export function AppProvider({ children }) {
   useEffect(() => {
     if (!supabase) {
       console.warn('[PropertyInsta] Supabase not configured — using static data only');
+      setDbStatus('no-supabase');
+      setDbMsg('Supabase not configured');
       return;
     }
 
@@ -139,6 +144,7 @@ export function AppProvider({ children }) {
     async function initSupabase() {
       try {
         console.log('[PropertyInsta] Fetching properties & reels from Supabase...');
+        setDbMsg('Fetching from Supabase...');
         // 1. Fetch initial data
         const [{ data: props, error: propsErr }, { data: reels, error: reelsErr }] = await Promise.all([
           supabase.from('properties').select('*').order('id', { ascending: false }),
@@ -147,24 +153,35 @@ export function AppProvider({ children }) {
 
         if (propsErr) {
           console.error('[PropertyInsta] Properties fetch error:', propsErr.message);
+          setDbStatus('error');
+          setDbMsg('Error: ' + propsErr.message);
         }
         if (reelsErr) {
           console.error('[PropertyInsta] Reels fetch error:', reelsErr.message);
         }
 
         if (!propsErr && props) {
-          console.log(`[PropertyInsta] Loaded ${props.length} properties from Supabase`);
+          console.log('[PropertyInsta] Loaded ' + props.length + ' properties from Supabase');
           const mapped = props.map(mapDBProperty);
           setAllProperties(mergeWithStatic(mapped, staticProperties));
           setDbReady(true);
+          setDbStatus('connected');
+          setDbMsg('Loaded ' + props.length + ' properties from Supabase');
+        } else if (propsErr) {
+          // error already handled above
+        } else {
+          setDbStatus('connected');
+          setDbMsg('0 properties in Supabase (table may be empty)');
         }
         if (!reelsErr && reels) {
-          console.log(`[PropertyInsta] Loaded ${reels.length} reels from Supabase`);
+          console.log('[PropertyInsta] Loaded ' + reels.length + ' reels from Supabase');
           const mapped = reels.map(mapDBReel);
           setAllReels(mapped.length > 0 ? mapped : staticReels);
         }
       } catch (err) {
         console.error('[PropertyInsta] initSupabase failed:', err);
+        setDbStatus('error');
+        setDbMsg('Exception: ' + (err.message || 'unknown'));
       }
 
       // 2. Subscribe to real-time changes on properties
@@ -469,7 +486,7 @@ export function AppProvider({ children }) {
     filters, setFilters,
     filteredProperties, displayedProperties,
     allProperties, allReels,
-    dbReady,
+    dbReady, dbStatus, dbMsg,
     currentPage, loadMore, hasMore, filteredCount,
     savedIds, toggleSave,
     likedIds, toggleLike,
