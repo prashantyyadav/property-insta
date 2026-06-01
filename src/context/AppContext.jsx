@@ -143,7 +143,7 @@ export function AppProvider({ children }) {
 
     async function initSupabase() {
       try {
-        console.log('[PropertyInsta] Fetching properties & reels from Supabase...');
+        console.log('[PropertyInsta] v2-DEBUG Fetching properties & reels from Supabase...');
         setDbMsg('Fetching from Supabase...');
         // 1. Fetch initial data
         const [{ data: props, error: propsErr }, { data: reels, error: reelsErr }] = await Promise.all([
@@ -151,8 +151,19 @@ export function AppProvider({ children }) {
           supabase.from('reels').select('*').order('id', { ascending: false }),
         ]);
 
+        // DEBUG: dump raw Supabase response
+        console.log('[PropertyInsta] DEBUG raw props:', props);
+        console.log('[PropertyInsta] DEBUG propsErr:', propsErr);
+        if (props) {
+          console.log('[PropertyInsta] DEBUG props.length:', props.length);
+          console.log('[PropertyInsta] DEBUG props IDs:', props.map(p => p.id));
+          console.log('[PropertyInsta] DEBUG props titles:', props.map(p => p.title));
+        }
+        console.log('[PropertyInsta] DEBUG staticProperties IDs:', staticProperties.map(p => p.id));
+
         if (propsErr) {
           console.error('[PropertyInsta] Properties fetch error:', propsErr.message);
+          console.error('[PropertyInsta] DEBUG full propsErr:', JSON.stringify(propsErr));
           setDbStatus('error');
           setDbMsg('Error: ' + propsErr.message);
         }
@@ -163,10 +174,14 @@ export function AppProvider({ children }) {
         if (!propsErr && props) {
           console.log('[PropertyInsta] Loaded ' + props.length + ' properties from Supabase');
           const mapped = props.map(mapDBProperty);
-          setAllProperties(mergeWithStatic(mapped, staticProperties));
+          console.log('[PropertyInsta] DEBUG mapped IDs:', mapped.map(p => p.id));
+          const merged = mergeWithStatic(mapped, staticProperties);
+          console.log('[PropertyInsta] DEBUG merged IDs (first 10):', merged.slice(0, 10).map(p => p.id));
+          console.log('[PropertyInsta] DEBUG merged total count:', merged.length);
+          setAllProperties(merged);
           setDbReady(true);
           setDbStatus('connected');
-          setDbMsg('Loaded ' + props.length + ' properties from Supabase');
+          setDbMsg('SUPABASE:' + props.length + ' | TOTAL:' + merged.length);
         } else if (propsErr) {
           // error already handled above
         } else {
