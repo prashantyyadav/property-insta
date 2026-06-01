@@ -128,26 +128,43 @@ export function AppProvider({ children }) {
   // Supabase Real-Time Subscription
   // ==========================================================================
   useEffect(() => {
-    if (!supabase) return;
+    if (!supabase) {
+      console.warn('[PropertyInsta] Supabase not configured — using static data only');
+      return;
+    }
 
     let propertiesChannel;
     let reelsChannel;
 
     async function initSupabase() {
-      // 1. Fetch initial data
-      const [{ data: props, error: propsErr }, { data: reels, error: reelsErr }] = await Promise.all([
-        supabase.from('properties').select('*').order('id', { ascending: false }),
-        supabase.from('reels').select('*').order('id', { ascending: false }),
-      ]);
+      try {
+        console.log('[PropertyInsta] Fetching properties & reels from Supabase...');
+        // 1. Fetch initial data
+        const [{ data: props, error: propsErr }, { data: reels, error: reelsErr }] = await Promise.all([
+          supabase.from('properties').select('*').order('id', { ascending: false }),
+          supabase.from('reels').select('*').order('id', { ascending: false }),
+        ]);
 
-      if (!propsErr && props) {
-        const mapped = props.map(mapDBProperty);
-        setAllProperties(mergeWithStatic(mapped, staticProperties));
-        setDbReady(true);
-      }
-      if (!reelsErr && reels) {
-        const mapped = reels.map(mapDBReel);
-        setAllReels(mapped.length > 0 ? mapped : staticReels);
+        if (propsErr) {
+          console.error('[PropertyInsta] Properties fetch error:', propsErr.message);
+        }
+        if (reelsErr) {
+          console.error('[PropertyInsta] Reels fetch error:', reelsErr.message);
+        }
+
+        if (!propsErr && props) {
+          console.log(`[PropertyInsta] Loaded ${props.length} properties from Supabase`);
+          const mapped = props.map(mapDBProperty);
+          setAllProperties(mergeWithStatic(mapped, staticProperties));
+          setDbReady(true);
+        }
+        if (!reelsErr && reels) {
+          console.log(`[PropertyInsta] Loaded ${reels.length} reels from Supabase`);
+          const mapped = reels.map(mapDBReel);
+          setAllReels(mapped.length > 0 ? mapped : staticReels);
+        }
+      } catch (err) {
+        console.error('[PropertyInsta] initSupabase failed:', err);
       }
 
       // 2. Subscribe to real-time changes on properties
