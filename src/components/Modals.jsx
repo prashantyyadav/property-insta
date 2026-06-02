@@ -79,6 +79,7 @@ function PropertyDetailModal() {
   const { propertyId } = activeModal.data || {};
   const [activeImg, setActiveImg] = useState(0);
   const [showFullDesc, setShowFullDesc] = useState(false);
+  const [showPhone, setShowPhone] = useState(false);
 
   const property = allProperties.find(p => p.id === propertyId);
   if (!property) return null;
@@ -152,6 +153,7 @@ function PropertyDetailModal() {
             {property.floor && <div className="spec-item"><strong>{property.floor}</strong><span>Floor</span></div>}
             {property.age && <div className="spec-item"><strong>{property.age}</strong><span>Age</span></div>}
             {property.pricePerSqft && <div className="spec-item"><strong>₹{property.pricePerSqft}</strong><span>/sqft</span></div>}
+            {property.views > 0 && <div className="spec-item"><strong>{property.views >= 1000 ? (property.views/1000).toFixed(1)+'k' : property.views}</strong><span>Views</span></div>}
           </div>
 
           {/* Description */}
@@ -169,6 +171,39 @@ function PropertyDetailModal() {
             </div>
           )}
 
+          {/* Financial: EMI & Bank Offers */}
+          {(property.emiEstimate || property.bankOffers) && (
+            <div className="prop-modal-section">
+              <h4>💰 Financial Info</h4>
+              <div className="prop-financial-row">
+                {property.emiEstimate > 0 && (
+                  <div className="financial-card emi">
+                    <span className="financial-icon">🏦</span>
+                    <div>
+                      <span className="financial-label">Estimated EMI</span>
+                      <strong>₹{property.emiEstimate.toLocaleString('en-IN')}/mo</strong>
+                    </div>
+                  </div>
+                )}
+                {property.bankOffers && (
+                  <div className="financial-card offers">
+                    <span className="financial-icon">🎁</span>
+                    <div>
+                      <span className="financial-label">Bank Offers</span>
+                      <strong>{typeof property.bankOffers === 'string' ? property.bankOffers : 'Available'}</strong>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button
+                className="text-link"
+                onClick={() => setActiveModal({ type: 'mortgage', data: { propertyId: property.id, price: property.price } })}
+              >
+                📊 Open EMI Calculator
+              </button>
+            </div>
+          )}
+
           {/* Detail Grid */}
           <div className="prop-modal-section">
             <h4>Property Details</h4>
@@ -179,8 +214,32 @@ function PropertyDetailModal() {
               {property.facing && <div className="detail-item"><span>Facing</span><strong>{property.facing}</strong></div>}
               {property.parking && <div className="detail-item"><span>Parking</span><strong>{property.parking}</strong></div>}
               {property.possession && <div className="detail-item"><span>Possession</span><strong>{property.possession}</strong></div>}
+              {property.listingStatus && <div className="detail-item"><span>Listing Status</span><strong>{property.listingStatus}</strong></div>}
+              {property.reraId && <div className="detail-item"><span>RERA ID</span><strong>{property.reraId}</strong></div>}
+              {property.postDate && <div className="detail-item"><span>Posted</span><strong>{property.postDate}</strong></div>}
+              {property.builder && <div className="detail-item"><span>Builder</span><strong>{property.builder}</strong></div>}
             </div>
           </div>
+
+          {/* Developer / Builder Info */}
+          {(property.builder || property.developerLogo || property.developerWebsite) && (
+            <div className="prop-modal-section">
+              <h4>🏗️ Developer / Builder</h4>
+              <div className="prop-developer-row">
+                {property.developerLogo && (
+                  <img src={property.developerLogo} alt={property.builder || 'Developer'} className="developer-logo" />
+                )}
+                <div className="developer-info">
+                  {property.builder && <strong className="developer-name">{property.builder}</strong>}
+                  {property.developerWebsite && (
+                    <a href={property.developerWebsite} target="_blank" rel="noopener noreferrer" className="developer-website-link">
+                      🌐 Visit Website
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Amenities */}
           {property.amenities && property.amenities.length > 0 && (
@@ -202,6 +261,58 @@ function PropertyDetailModal() {
                 {property.neighborhood.map(n => (
                   <span key={n} className="amenity-chip nearby">{n}</span>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Floor Plan */}
+          {property.floorPlan && (
+            <div className="prop-modal-section">
+              <h4>📐 Floor Plan</h4>
+              <div className="floor-plan-container">
+                <img
+                  src={property.floorPlan}
+                  alt="Floor Plan"
+                  className="floor-plan-img"
+                  onClick={() => window.open(property.floorPlan, '_blank')}
+                />
+                <button
+                  className="text-link"
+                  onClick={() => window.open(property.floorPlan, '_blank')}
+                  style={{ marginTop: 8 }}
+                >
+                  🔍 View Full Floor Plan
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Engagement Stats */}
+          {(property.comments > 0 || property.shares > 0 || property.views > 0) && (
+            <div className="prop-modal-section">
+              <h4>📈 Engagement</h4>
+              <div className="prop-engagement-row">
+                {property.views > 0 && (
+                  <div className="engagement-stat">
+                    <span>👁️</span>
+                    <strong>{property.views >= 1000 ? (property.views/1000).toFixed(1)+'k' : property.views}</strong>
+                    <span>Views</span>
+                  </div>
+                )}
+                {property.comments > 0 && (
+                  <div className="engagement-stat">
+                    <span>💬</span>
+                    <strong>{property.comments}</strong>
+                    <span>Comments</span>
+                  </div>
+                )}
+                {property.shares > 0 && (
+                  <div className="engagement-stat">
+                    <span>🔄</span>
+                    <strong>{property.shares}</strong>
+                    <span>Shares</span>
+                  </div>
+                )}
               </div>
             </div>
           )}
@@ -234,12 +345,31 @@ function PropertyDetailModal() {
                 <strong>{agent.name}</strong>
                 {agent.company && <span>{agent.company}</span>}
                 {agent.experience && <span>{agent.experience} experience</span>}
+                <div className="agent-stats-row">
+                  {agent.rating && <span className="agent-stat">⭐ {agent.rating}</span>}
+                  {agent.sales > 0 && <span className="agent-stat">🏠 {agent.sales} sold</span>}
+                </div>
               </div>
-              <button className="agent-contact-btn"
-                onClick={() => setActiveModal({ type: 'agent', data: { agentId: property.agent.id } })}
-              >
-                View Profile
-              </button>
+              <div className="agent-actions-col">
+                {agent.phone && (
+                  <button
+                    className="agent-contact-btn"
+                    onClick={() => setShowPhone(!showPhone)}
+                  >
+                    {showPhone ? `📞 ${agent.phone}` : '📞 Call Agent'}
+                  </button>
+                )}
+                {agent.email && (
+                  <a href={`mailto:${agent.email}`} className="agent-email-link">
+                    ✉️ Email
+                  </a>
+                )}
+                <button className="agent-profile-link text-link"
+                  onClick={() => setActiveModal({ type: 'agent', data: { agentId: property.agent.id } })}
+                >
+                  View Full Profile →
+                </button>
+              </div>
             </div>
           </div>
 

@@ -60,6 +60,8 @@ function mapDBProperty(db) {
     lng: db.lng,
     neighborhood: Array.isArray(db.neighborhood) ? db.neighborhood : ['Schools: N/A', 'Transit: N/A', 'Walk Score: 0/100', 'Crime Rate: N/A'],
     floorPlan: db.floor_plan,
+    developerLogo: db.developer_logo || '',
+    developerWebsite: db.developer_website || '',
     age: db.age || 'New',
     mediaAspectRatio: db.media_aspect_ratio || '4/3',
     listingStatus: db.listing_status || db.possession_status || 'Ready to Move',
@@ -82,6 +84,9 @@ function mapDBReel(db) {
     views: db.views || 0,
     likes: db.likes || 0,
     status: db.status,
+    duration: db.duration || '',
+    tags: db.tags || [],
+    agentName: db.agent_name,
     builder: db.builder,
     reraId: db.rera_id,
     possessionDate: db.possession_date,
@@ -117,9 +122,6 @@ export function AppProvider({ children }) {
   // Supabase availability flag
   const [dbReady, setDbReady] = useState(false);
 
-  // DIAGNOSTIC: track Supabase fetch state for debugging
-  const [dbDiag, setDbDiag] = useState({ status: 'idle', raw: 0, mapped: 0, merged: 0, state: staticProperties.length, error: null, url: null });
-
   // View management
   const [currentView, setCurrentView] = useState('feed');
 
@@ -140,9 +142,6 @@ export function AppProvider({ children }) {
     let reelsChannel;
 
     async function initSupabase() {
-      const supabaseUrl = (typeof supabase !== 'undefined' && supabase) ? 'https://ioblbfugnhtghvxbyeos.supabase.co' : 'NONE';
-      setDbDiag(d => ({ ...d, status: 'connecting', url: supabaseUrl }));
-
       try {
         console.log('[PropertyInsta] Fetching properties & reels from Supabase...');
         // 1. Fetch initial data
@@ -150,9 +149,6 @@ export function AppProvider({ children }) {
           supabase.from('properties').select('*').order('id', { ascending: false }),
           supabase.from('reels').select('*').order('id', { ascending: false }),
         ]);
-
-        const rawCount = props ? props.length : 0;
-        setDbDiag(d => ({ ...d, status: 'fetched', raw: rawCount, error: propsErr ? propsErr.message : null }));
 
         if (propsErr) {
           console.error('[PropertyInsta] Properties fetch error:', propsErr.message);
@@ -165,20 +161,17 @@ export function AppProvider({ children }) {
           console.log('[PropertyInsta] Loaded ' + props.length + ' properties from Supabase');
           const mapped = props.map(mapDBProperty);
           const merged = mergeWithStatic(mapped, staticProperties);
-          setDbDiag(d => ({ ...d, status: 'success', mapped: mapped.length, merged: merged.length, state: staticProperties.length, error: null }));
           setAllProperties(merged);
           setDbReady(true);
-        } else if (propsErr) {
-          setDbDiag(d => ({ ...d, status: 'error', error: propsErr.message || 'unknown fetch error' }));
         }
         if (!reelsErr && reels) {
           console.log('[PropertyInsta] Loaded ' + reels.length + ' reels from Supabase');
           const mapped = reels.map(mapDBReel);
-          setAllReels(mapped.length > 0 ? mapped : staticReels);
+          const merged = mergeWithStatic(mapped, staticReels);
+          setAllReels(merged);
         }
       } catch (err) {
         console.error('[PropertyInsta] initSupabase failed:', err);
-        setDbDiag(d => ({ ...d, status: 'exception', error: err.message || String(err) }));
       }
 
       // 2. Subscribe to real-time changes on properties
@@ -483,7 +476,7 @@ export function AppProvider({ children }) {
     filters, setFilters,
     filteredProperties, displayedProperties,
     allProperties, allReels,
-    dbReady, dbDiag,
+    dbReady,
     currentPage, loadMore, hasMore, filteredCount,
     savedIds, toggleSave,
     likedIds, toggleLike,
