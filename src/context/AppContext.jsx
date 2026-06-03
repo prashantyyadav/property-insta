@@ -217,7 +217,7 @@ export function AppProvider({ children }) {
                 const idx = updated.findIndex(r => r.id === payload.old.id);
                 if (idx !== -1) updated.splice(idx, 1);
               }
-              return updated;
+              return mergeWithStatic(updated, staticReels);
             });
           }
         )

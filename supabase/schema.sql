@@ -69,6 +69,9 @@ CREATE TABLE IF NOT EXISTS reels (
   views         INT DEFAULT 0,
   likes         INT DEFAULT 0,
   status        TEXT DEFAULT 'Ready to Move',
+  duration      TEXT DEFAULT '00:15',
+  tags          JSONB DEFAULT '[]'::jsonb,
+  agent_name    TEXT DEFAULT '',
   builder       TEXT,
   rera_id       TEXT,
   possession_date TEXT,
@@ -127,22 +130,22 @@ CREATE POLICY "Public can read reels"     ON reels     FOR SELECT USING (true);
 CREATE POLICY "Public can read stories"   ON stories   FOR SELECT USING (true);
 CREATE POLICY "Public can read builders"  ON builders  FOR SELECT USING (true);
 
--- Only authenticated users (admin panel) can insert/update/delete
-CREATE POLICY "Authenticated can insert properties" ON properties FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can update properties" ON properties FOR UPDATE USING (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can delete properties" ON properties FOR DELETE USING (auth.role() = 'authenticated');
+-- Anyone can write (admin panel uses anon key for raw fetch)
+CREATE POLICY "Anyone can insert properties" ON properties FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update properties" ON properties FOR UPDATE USING (true);
+CREATE POLICY "Anyone can delete properties" ON properties FOR DELETE USING (true);
 
-CREATE POLICY "Authenticated can insert reels" ON reels FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can update reels" ON reels FOR UPDATE USING (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can delete reels" ON reels FOR DELETE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anyone can insert reels" ON reels FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update reels" ON reels FOR UPDATE USING (true);
+CREATE POLICY "Anyone can delete reels" ON reels FOR DELETE USING (true);
 
-CREATE POLICY "Authenticated can insert stories" ON stories FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can update stories" ON stories FOR UPDATE USING (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can delete stories" ON stories FOR DELETE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anyone can insert stories" ON stories FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update stories" ON stories FOR UPDATE USING (true);
+CREATE POLICY "Anyone can delete stories" ON stories FOR DELETE USING (true);
 
-CREATE POLICY "Authenticated can insert builders" ON builders FOR INSERT WITH CHECK (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can update builders" ON builders FOR UPDATE USING (auth.role() = 'authenticated');
-CREATE POLICY "Authenticated can delete builders" ON builders FOR DELETE USING (auth.role() = 'authenticated');
+CREATE POLICY "Anyone can insert builders" ON builders FOR INSERT WITH CHECK (true);
+CREATE POLICY "Anyone can update builders" ON builders FOR UPDATE USING (true);
+CREATE POLICY "Anyone can delete builders" ON builders FOR DELETE USING (true);
 
 -- ============================================================================
 -- Auto-update updated_at trigger
