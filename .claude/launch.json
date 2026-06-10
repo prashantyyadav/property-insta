@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "propertyinsta",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "--port", "5173"],
+      "port": 5173
+    },
+    {
+      "name": "adminpanel",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "/Users/prashantyadav/demo/adminpanel", "run", "dev", "--", "--port", "5175"],
+      "port": 5175
+    }
+  ]
+}
