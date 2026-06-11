@@ -23,10 +23,12 @@ import FinancingView from './components/os/FinancingView';
 import LegalView from './components/os/LegalView';
 import InfraView from './components/os/InfraView';
 import DataCloudView from './components/os/DataCloudView';
-import {
-  InvestmentView, RentalView, SocietyOSView, BuilderERPView,
-  PropertyMgmtView, LocalCommerceView, SocialView, GovIntView, AIExchangeView,
-} from './components/os/ComingSoonModules';
+import InvestmentView from './components/os/InvestmentView';
+import RentalView from './components/os/RentalView';
+import LocalCommerceView from './components/os/LocalCommerceView';
+import SocialView from './components/os/SocialView';
+import GovIntView from './components/os/GovIntView';
+import AIExchangeView from './components/os/AIExchangeView';
 import './styles/styles.scss';
 
 function AppLayout() {
@@ -61,9 +63,6 @@ function AppLayout() {
       case 'datacloud': return <div className="os-page-wrap"><DataCloudView /></div>;
       case 'investment': return <div className="os-page-wrap"><InvestmentView /></div>;
       case 'rental': return <div className="os-page-wrap"><RentalView /></div>;
-      case 'society': return <div className="os-page-wrap"><SocietyOSView /></div>;
-      case 'buildererp': return <div className="os-page-wrap"><BuilderERPView /></div>;
-      case 'propmgmt': return <div className="os-page-wrap"><PropertyMgmtView /></div>;
       case 'commerce': return <div className="os-page-wrap"><LocalCommerceView /></div>;
       case 'social': return <div className="os-page-wrap"><SocialView /></div>;
       case 'govint': return <div className="os-page-wrap"><GovIntView /></div>;

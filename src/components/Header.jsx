@@ -32,7 +32,7 @@ const OS_MODULES_BY_ROLE = {
   ],
 };
 
-const TIER1_CITIES = ['All India', 'Gurgaon', 'Delhi', 'Mumbai', 'Bangalore', 'Hyderabad', 'Chennai', 'Kolkata', 'Pune', 'Ahmedabad', 'Noida'];
+const TIER1_CITIES = ['All India', 'Gurgaon'];
 
 export default function Header() {
   const {

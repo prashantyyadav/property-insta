@@ -14,14 +14,18 @@
 }
 
 .ig-header-inner {
-  max-width: 1200px;
+  max-width: 1440px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 40px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 24px;
   height: 60px;
 }
+
+.ig-logo { margin-right: 8px; }
+.ig-nav-tabs { margin: 0 auto 0 0; }
+.ig-header-actions { margin-left: auto; }
 
 // Logo
 .ig-logo {
@@ -51,7 +55,7 @@
   font-family: 'Space Grotesk', sans-serif;
   font-size: 22px;
   font-weight: 800;
-  background: var(--ig-gradient-accent);
+  background: linear-gradient(135deg, #E02D5C 0%, #FF6B35 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -89,7 +93,7 @@
   &.active {
     background: var(--ig-gradient);
     color: white;
-    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.35);
+    box-shadow: 0 4px 12px rgba(31, 86, 196, 0.32);
   }
 
   .ig-nav-icon { width: 16px; height: 16px; flex-shrink: 0; }
@@ -202,7 +206,7 @@
     transition: var(--transition-fast);
     font-family: 'Inter', sans-serif;
 
-    &:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(255, 109, 0, 0.35); }
+    &:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(31, 86, 196, 0.4); }
   }
 }
 

@@ -74,10 +74,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 16px rgba(25,118,210,0.4);
+  box-shadow: 0 4px 16px rgba(31,86,196,0.4);
   transition: var(--transition-fast);
 
-  &:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(25,118,210,0.5); }
+  &:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(31,86,196,0.5); }
 
   svg { display: block; }
 }

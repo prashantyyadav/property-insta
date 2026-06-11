@@ -16,6 +16,7 @@ export default function FeedView() {
     addRecentView,
     hasMore,
     loadMore,
+    filteredCount,
   } = useApp();
 
   const [openHouseCountdown, setOpenHouseCountdown] = useState({ hours: 0, minutes: 0, seconds: 0 });
@@ -41,6 +42,15 @@ export default function FeedView() {
     return () => clearInterval(interval);
   }, [updateCountdown]);
 
+  // Active filter detection — hide discovery sections when browsing filtered results
+  const hasActiveFilters = !!(
+    filters.search || filters.city || filters.priceRange || filters.priceMin || filters.priceMax ||
+    (filters.propertyType && filters.propertyType.length) ||
+    filters.bedrooms !== null && filters.bedrooms !== undefined ||
+    (filters.amenities && filters.amenities.length) ||
+    (filters.listingStatus && filters.listingStatus.length)
+  );
+
   // Get recently viewed properties from context allProperties
   const recentProps = allProperties.filter(p => recentlyViewed.includes(p.id)).slice(0, 4);
 
@@ -58,7 +68,7 @@ export default function FeedView() {
       </section>
 
       {/* Recently Viewed */}
-      {recentProps.length > 0 && (
+      {!hasActiveFilters && recentProps.length > 0 && (
         <section className="ig-section">
           <div className="ig-section-header">
             <h2 className="ig-section-title">🕐 Recently Viewed</h2>
@@ -72,7 +82,7 @@ export default function FeedView() {
       )}
 
       {/* Trending Properties */}
-      {trendingProps.length > 0 && (
+      {!hasActiveFilters && trendingProps.length > 0 && (
         <section className="ig-section">
           <div className="ig-section-header">
             <h2 className="ig-section-title">🔥 Trending Now</h2>
@@ -86,7 +96,7 @@ export default function FeedView() {
       )}
 
       {/* Open House Banner */}
-      {openHouseProp && (
+      {!hasActiveFilters && openHouseProp && (
         <section className="ig-open-house-banner">
           <div className="ohb-content">
             <div className="ohb-text">
@@ -114,8 +124,13 @@ export default function FeedView() {
       <section className="ig-section">
         <div className="ig-section-header">
           <h2 className="ig-section-title">
-            {filters.search ? `🔍 Results for "${filters.search}"` : '🏘️ All Properties'}
+            {filters.search
+              ? `🔍 Results for "${filters.search}"`
+              : filters.city
+                ? `📍 Properties in ${filters.city}`
+                : '🏘️ All Properties'}
           </h2>
+          <span className="ig-result-count">{filteredCount} {filteredCount === 1 ? 'listing' : 'listings'}</span>
         </div>
 
         {displayedProperties.length === 0 ? (

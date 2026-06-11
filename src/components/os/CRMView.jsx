@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { formatPriceIndian } from '../../data';
 import { useToast } from '../../hooks/useToast';
+import { useSupabaseCollection } from '../../hooks/useSupabaseCollection';
 
 const PIPELINE_STAGES = ['New Lead', 'Contacted', 'Site Visit', 'Negotiation', 'Closed'];
 
@@ -21,28 +22,24 @@ const CALL_LOG = [
 
 export default function CRMView() {
   const toast = useToast();
-  const [leads, setLeads] = useState(INIT_LEADS);
+  const { rows: leads, add, update } = useSupabaseCollection('crm_leads', INIT_LEADS, { localKey: 'os_crm_leads' });
   const [tab, setTab] = useState('pipeline');
   const [addModal, setAddModal] = useState(false);
   const [newLead, setNewLead] = useState({ name: '', phone: '', budget: '', type: 'Apartment', location: '', source: 'Website' });
 
-  const advanceStage = (id) => {
-    setLeads(prev => prev.map(l => {
-      if (l.id === id && l.stage < 4) {
-        toast(`${l.name} moved to "${PIPELINE_STAGES[l.stage + 1]}"`, 'success');
-        return { ...l, stage: l.stage + 1 };
-      }
-      return l;
-    }));
+  const advanceStage = (lead) => {
+    if (lead && lead.stage < 4) {
+      update(lead.id, { stage: lead.stage + 1 });
+      toast(`${lead.name} moved to "${PIPELINE_STAGES[lead.stage + 1]}"`, 'success');
+    }
   };
 
-  const saveLead = () => {
+  const saveLead = async () => {
     if (!newLead.name || !newLead.phone) { toast('Name and phone are required', 'warning'); return; }
-    const lead = { ...newLead, id: Date.now(), stage: 0, hot: false, date: new Date().toISOString().slice(0, 10), budget: Number(newLead.budget) || 0 };
-    setLeads(prev => [lead, ...prev]);
+    await add({ name: newLead.name, phone: newLead.phone, budget: Number(newLead.budget) || 0, type: newLead.type, location: newLead.location, source: newLead.source, stage: 0, hot: false });
     setAddModal(false);
     setNewLead({ name: '', phone: '', budget: '', type: 'Apartment', location: '', source: 'Website' });
-    toast(`Lead "${lead.name}" added`, 'success');
+    toast(`Lead "${newLead.name}" added`, 'success');
   };
 
   return (
@@ -94,7 +91,7 @@ export default function CRMView() {
                     <button title="Email" onClick={() => toast(`Email composed for ${lead.name}`, 'info')}>✉️</button>
                   </div>
                   {lead.stage < 4 && (
-                    <button className="os-btn-outline small" style={{ width: '100%', marginTop: 6 }} onClick={() => advanceStage(lead.id)}>
+                    <button className="os-btn-outline small" style={{ width: '100%', marginTop: 6 }} onClick={() => advanceStage(lead)}>
                       Move to {PIPELINE_STAGES[lead.stage + 1]} →
                     </button>
                   )}
@@ -154,7 +151,7 @@ export default function CRMView() {
                 <span className="cfc-stage">{PIPELINE_STAGES[lead.stage]}</span>
               </div>
               <div className="cfc-actions">
-                <button className="os-btn-primary small" onClick={() => { advanceStage(lead.id); }}>Done ✓</button>
+                <button className="os-btn-primary small" onClick={() => { advanceStage(lead); }}>Done ✓</button>
                 <button className="os-btn-outline small" onClick={() => toast(`Follow-up rescheduled for ${lead.name}`, 'info')}>Reschedule</button>
               </div>
             </div>

@@ -48,7 +48,7 @@
   align-items: center;
   justify-content: center;
 
-  &.hovered { transform: scale(1.08); box-shadow: 0 0 12px rgba(25,118,210,0.3); }
+  &.hovered { transform: scale(1.08); box-shadow: 0 0 12px rgba(31,86,196,0.3); }
 }
 
 .ig-story-avatar {
@@ -158,10 +158,10 @@
   text-transform: uppercase;
 
   &.featured { background: var(--ig-gradient-warm); color: white; }
-  &.hot { background: #ff2d55; color: white; }
-  &.premium { background: linear-gradient(135deg, #ff6d00, #ff9800); color: white; }
-  &.verified { background: rgba(46,125,50,0.85); color: white; }
-  &.rera { background: rgba(25,118,210,0.85); color: white; }
+  &.hot { background: #ef4444; color: white; }
+  &.premium { background: var(--ig-gradient-warm); color: white; }
+  &.verified { background: rgba(14,159,110,0.9); color: white; }
+  &.rera { background: rgba(31,86,196,0.9); color: white; }
 }
 
 .card-save-btn {
@@ -292,8 +292,8 @@
 .trending-badge {
   font-size: 11px;
   font-weight: 700;
-  color: #ff6d00;
-  background: rgba(255,109,0,0.1);
+  color: #1f56c4;
+  background: rgba(31,86,196,0.1);
   padding: 3px 8px;
   border-radius: var(--radius-full);
   white-space: nowrap;
@@ -387,14 +387,32 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--ig-border);
 
   h2, h3 {
-    font-size: 18px;
-    font-weight: 700;
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.02em;
+    color: var(--ig-text);
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+    position: relative;
+    padding-left: 14px;
+
+    &::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 4px;
+      height: 22px;
+      border-radius: 4px;
+      background: var(--ig-gradient);
+    }
 
     i, svg { color: var(--ig-accent); }
   }
@@ -405,8 +423,12 @@
     color: var(--ig-link);
     cursor: pointer;
     text-decoration: none;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    background: var(--badge-bg);
+    transition: var(--transition-fast);
 
-    &:hover { text-decoration: underline; }
+    &:hover { background: var(--ig-link); color: #fff; }
   }
 }
 
@@ -417,24 +439,24 @@
 }
 
 .ig-load-more-btn {
-  padding: 12px 32px;
-  border: 2px solid var(--ig-border);
+  padding: 13px 36px;
+  border: none;
   border-radius: var(--radius-full);
-  background: transparent;
-  color: var(--ig-link);
+  background: var(--ig-gradient);
+  color: #fff;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 650;
   cursor: pointer;
   transition: var(--transition-fast);
   font-family: 'Inter', sans-serif;
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 8px 22px rgba(31, 86, 196, 0.2);
 
   &:hover {
-    background: var(--ig-gradient);
-    color: white;
-    border-color: transparent;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(31, 86, 196, 0.3);
   }
 }
 
@@ -581,14 +603,18 @@
   transition: var(--transition-fast);
   font-family: 'Inter', sans-serif;
 
-  &:hover { box-shadow: 0 4px 12px rgba(25,118,210,0.3); transform: translateY(-1px); }
+  &:hover { box-shadow: 0 4px 12px rgba(31,86,196,0.3); transform: translateY(-1px); }
 }
 
-// Feed Grid — multi-column filling the page
+// Feed Grid — responsive, fills the page elegantly
 .ig-feed-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 22px;
+}
+
+@media (min-width: 1500px) {
+  .ig-feed-grid { grid-template-columns: repeat(4, 1fr); gap: 24px; }
 }
 
 // Result Count
@@ -683,4 +709,56 @@
 
   .ig-load-more-btn { padding: 8px 20px; font-size: 12px; }
   .ig-empty-state { padding: 2rem 1rem; }
+}
+// ============================================================
+// Layout rhythm & polish
+// ============================================================
+.ig-feed-content {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+.ig-section { margin: 0; }
+.ig-stories-section { margin-bottom: 4px; }
+
+// Premium stories shell
+.ig-stories {
+  padding: 18px 16px;
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+// Open house banner — refined gradient
+.ig-open-house-banner {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  background: var(--ig-gradient-cool);
+  box-shadow: 0 12px 32px rgba(31, 86, 196, 0.22);
+  .ohb-content {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 24px; padding: 26px 32px; flex-wrap: wrap;
+  }
+  .ohb-label {
+    display: inline-block; font-size: 12px; font-weight: 700; letter-spacing: 0.5px;
+    text-transform: uppercase; color: rgba(255,255,255,0.85);
+    background: rgba(255,255,255,0.15); padding: 4px 12px; border-radius: 20px; margin-bottom: 10px;
+  }
+  .ohb-text h3 { font-size: 22px; font-weight: 750; color: #fff; margin: 0 0 4px; }
+  .ohb-text p { color: rgba(255,255,255,0.85); margin: 0 0 10px; font-size: 14px; }
+  .ohb-countdown {
+    display: inline-block; font-size: 13px; font-weight: 600; color: #fff;
+    background: rgba(0,0,0,0.18); padding: 6px 14px; border-radius: 8px;
+  }
+  .ohb-btn {
+    background: #fff; color: var(--ig-link); border: none;
+    padding: 13px 26px; border-radius: var(--radius-full); font-weight: 700; font-size: 14px;
+    cursor: pointer; white-space: nowrap; transition: var(--transition-fast); flex-shrink: 0;
+    &:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+  }
+}
+
+@media (max-width: 767px) {
+  .ig-feed-content { gap: 28px; }
+  .ig-open-house-banner .ohb-content { padding: 20px; }
+  .ig-open-house-banner .ohb-text h3 { font-size: 18px; }
 }

@@ -10,31 +10,32 @@
 //   Large:         ≥ 1200px
 // ==========================================
 
-// Light mode — 99acres theme
+// Light mode — Professional Navy Blue + Orange accent
 :root {
-  --ig-bg: #f5f7fa;
+  --ig-bg: #f6f7fb;
   --ig-white: #ffffff;
-  --ig-border: #e0e4ea;
-  --ig-text: #1a1a2e;
-  --ig-text-secondary: #6b7280;
-  --ig-link: #1976d2;
-  --ig-danger: #ff2d55;
-  --ig-success: #2e7d32;
-  --ig-warning: #ff6d00;
-  --ig-accent: #ff6d00;
+  --ig-border: #e8eaf3;
+  --ig-text: #14162b;
+  --ig-text-secondary: #6a6f87;
+  --ig-link: #1f56c4;
+  --ig-danger: #dc2626;
+  --ig-success: #0e9f6e;
+  --ig-warning: #ea6a0c;
+  --ig-accent: #ea6a0c;
+  --ig-gold: #ea6a0c;
 
-  --ig-gradient: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
-  --ig-gradient-warm: linear-gradient(135deg, #ff6d00 0%, #e65100 100%);
-  --ig-gradient-cool: linear-gradient(135deg, #0288d1 0%, #1976d2 50%, #0d47a1 100%);
-  --ig-gradient-green: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%);
-  --ig-gradient-accent: linear-gradient(135deg, #1976d2 0%, #ff6d00 100%);
+  --ig-gradient: linear-gradient(135deg, #1b4db1 0%, #2e6fe0 100%);
+  --ig-gradient-warm: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  --ig-gradient-cool: linear-gradient(135deg, #16357a 0%, #1f56c4 55%, #2e6fe0 100%);
+  --ig-gradient-green: linear-gradient(135deg, #0e9f6e 0%, #0a7d56 100%);
+  --ig-gradient-accent: linear-gradient(135deg, #1b4db1 0%, #2e6fe0 100%);
 
-  --glass: rgba(255, 255, 255, 0.9);
+  --glass: rgba(255, 255, 255, 0.92);
   --glass-border: rgba(255, 255, 255, 0.6);
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.12);
-  --shadow-xl: 0 24px 64px rgba(0, 0, 0, 0.16);
+  --shadow-sm: 0 1px 3px rgba(20, 22, 43, 0.05);
+  --shadow-md: 0 4px 16px rgba(20, 22, 43, 0.08);
+  --shadow-lg: 0 14px 42px rgba(20, 22, 43, 0.12);
+  --shadow-xl: 0 24px 64px rgba(20, 22, 43, 0.16);
 
   --radius-sm: 4px;
   --radius: 8px;
@@ -47,28 +48,29 @@
 
   --card-bg: #ffffff;
   --card-border: #e0e4ea;
-  --hover-bg: rgba(25, 118, 210, 0.04);
+  --hover-bg: rgba(31, 86, 196, 0.05);
   --overlay-bg: rgba(0, 0, 0, 0.02);
   --chip-bg: #ffffff;
-  --stat-bg: #f0f4f8;
+  --stat-bg: #eef2f9;
   --footer-border: rgba(0, 0, 0, 0.06);
   --muted-bg: rgba(0, 0, 0, 0.03);
   --input-bg: #ffffff;
-  --badge-bg: rgba(25, 118, 210, 0.08);
+  --badge-bg: rgba(31, 86, 196, 0.08);
 }
 
 // Dark mode
 body.dark {
-  --ig-bg: #0d1117;
-  --ig-white: #161b22;
-  --ig-border: #30363d;
-  --ig-text: #e6edf3;
-  --ig-text-secondary: #8b949e;
-  --ig-link: #58a6ff;
-  --ig-danger: #f85149;
-  --ig-success: #3fb950;
-  --ig-warning: #d2991d;
-  --ig-accent: #ff6d00;
+  --ig-bg: #0a0c18;
+  --ig-white: #141826;
+  --ig-border: #262c42;
+  --ig-text: #eef0f8;
+  --ig-text-secondary: #9aa0bc;
+  --ig-link: #4a88f0;
+  --ig-danger: #f87171;
+  --ig-success: #16b883;
+  --ig-warning: #fb923c;
+  --ig-accent: #fb923c;
+  --ig-gold: #fb923c;
 
   --glass: rgba(22, 27, 34, 0.94);
   --glass-border: rgba(48, 54, 61, 0.7);
@@ -79,20 +81,20 @@ body.dark {
 
   --card-bg: #161b22;
   --card-border: #30363d;
-  --hover-bg: rgba(88, 166, 255, 0.06);
+  --hover-bg: rgba(74, 136, 240, 0.1);
   --overlay-bg: rgba(255, 255, 255, 0.02);
-  --chip-bg: #161b22;
+  --chip-bg: #121a2a;
   --stat-bg: rgba(255, 255, 255, 0.04);
   --footer-border: rgba(255, 255, 255, 0.08);
   --muted-bg: rgba(255, 255, 255, 0.04);
-  --input-bg: #161b22;
-  --badge-bg: rgba(88, 166, 255, 0.1);
+  --input-bg: #121a2a;
+  --badge-bg: rgba(74, 136, 240, 0.14);
 
-  --ig-gradient: linear-gradient(135deg, #58a6ff 0%, #3b82f6 100%);
-  --ig-gradient-warm: linear-gradient(135deg, #d2991d 0%, #ff6d00 100%);
-  --ig-gradient-cool: linear-gradient(135deg, #58a6ff 0%, #3b82f6 50%, #1d4ed8 100%);
-  --ig-gradient-green: linear-gradient(135deg, #3fb950 0%, #2e7d32 100%);
-  --ig-gradient-accent: linear-gradient(135deg, #58a6ff 0%, #d2991d 100%);
+  --ig-gradient: linear-gradient(135deg, #4a88f0 0%, #5b9bf5 100%);
+  --ig-gradient-warm: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
+  --ig-gradient-cool: linear-gradient(135deg, #4a88f0 0%, #5b9bf5 50%, #3a6ed0 100%);
+  --ig-gradient-green: linear-gradient(135deg, #16b883 0%, #0e9f6e 100%);
+  --ig-gradient-accent: linear-gradient(135deg, #4a88f0 0%, #5b9bf5 100%);
 }
 
 // Fonts

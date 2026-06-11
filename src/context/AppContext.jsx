@@ -3,11 +3,36 @@ import { allProperties as staticProperties, allReels as staticReels, formatPrice
 import { supabase } from '../lib/supabase';
 
 // ============================================================================
+// Derive a canonical city from a free-text location string
+// ============================================================================
+export function deriveCity(loc = '') {
+  const l = (loc || '').toLowerCase();
+  if (l.includes('faridabad')) return 'Faridabad';
+  if (l.includes('ghaziabad') || l.includes('indirapuram') || l.includes('crossings') || l.includes('raj nagar')) return 'Ghaziabad';
+  if (l.includes('greater noida') || l.includes('noida extension') || l.includes('noida west')) return 'Greater Noida';
+  if (l.includes('noida') || l.includes('wish town') || l.includes('jaypee')) return 'Noida';
+  // "Dwarka Expressway" (any abbreviation: exp / expwy / expressway) is a GURGAON corridor
+  const isDwarkaExpwy = l.includes('dwarka') && /\bexp/.test(l);
+  // Delhi — only the bare "Dwarka" sub-city (e.g., "Sector 23, Dwarka"), NOT the Gurgaon expressway
+  if (l.includes('new delhi') || (l.includes('dwarka') && !isDwarkaExpwy)) return 'Delhi';
+  // Gurgaon / Gurugram micro-markets
+  if (
+    isDwarkaExpwy ||
+    l.includes('gurgaon') || l.includes('gurugram') || l.includes('golf course') ||
+    l.includes('spr') || l.includes('southern peripheral') || l.includes('sohna') ||
+    l.includes('dlf') || l.includes('sushant') ||
+    l.includes('nirvana') || l.includes('cyber') || l.includes('mg road') || l.includes('manesar')
+  ) return 'Gurgaon';
+  return 'Other';
+}
+
+// ============================================================================
 // Property mapping: snake_case (DB) → camelCase (React)
 // ============================================================================
 function mapDBProperty(db) {
   return {
     id: db.id,
+    city: deriveCity(db.location),
     title: db.title,
     location: db.location,
     price: db.price,
@@ -284,13 +309,7 @@ export function AppProvider({ children }) {
       );
     }
     if (filters.city) {
-      const cityQ = filters.city.toLowerCase();
-      result = result.filter(p => {
-        const loc = (p.location || '').toLowerCase();
-        const builder = (p.builder || '').toLowerCase();
-        const title = (p.title || '').toLowerCase();
-        return loc.includes(cityQ) || builder.includes(cityQ) || title.includes(cityQ);
-      });
+      result = result.filter(p => (p.city || deriveCity(p.location)) === filters.city);
     }
     if (filters.priceRange) {
       const priceRanges = {

@@ -20,7 +20,7 @@
   .hero-overlay-gradient {
     position: absolute;
     inset: 0;
-    background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.4) 40%, rgba(25,118,210,0.15) 100%);
+    background: linear-gradient(135deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.4) 40%, rgba(31,86,196,0.18) 100%);
     z-index: 1;
   }
 }
@@ -38,7 +38,7 @@
 .hero-orb-1 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(25,118,210,0.5), transparent);
+  background: radial-gradient(circle, rgba(31,86,196,0.5), transparent);
   top: -80px;
   right: 10%;
   animation-delay: 0s;
@@ -47,7 +47,7 @@
 .hero-orb-2 {
   width: 250px;
   height: 250px;
-  background: radial-gradient(circle, rgba(255,109,0,0.4), transparent);
+  background: radial-gradient(circle, rgba(31,86,196,0.4), transparent);
   bottom: -60px;
   left: 5%;
   animation-delay: 3s;
@@ -91,7 +91,7 @@
   text-shadow: 0 2px 20px rgba(0,0,0,0.3);
 
   span {
-    background: linear-gradient(135deg, #ff6d00, #ff9800);
+    background: linear-gradient(135deg, #fb8c3a, #ea580c);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -165,7 +165,7 @@
     color: var(--ig-text);
     transition: var(--transition-fast);
 
-    &:focus { outline: none; border-color: var(--ig-link); box-shadow: 0 0 0 3px rgba(25,118,210,0.1); }
+    &:focus { outline: none; border-color: var(--ig-link); box-shadow: 0 0 0 3px rgba(31,86,196,0.12); }
   }
 
   svg {
@@ -204,7 +204,7 @@
   align-items: center;
   gap: 8px;
 
-  &:hover { transform: scale(1.03); box-shadow: 0 4px 16px rgba(255, 109, 0, 0.35); }
+  &:hover { transform: scale(1.03); box-shadow: 0 6px 20px rgba(234, 88, 12, 0.45); }
 }
 
 .hero-search-tags {
