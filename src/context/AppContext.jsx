@@ -11,6 +11,14 @@ export function deriveCity(loc = '') {
   if (l.includes('ghaziabad') || l.includes('indirapuram') || l.includes('crossings') || l.includes('raj nagar')) return 'Ghaziabad';
   if (l.includes('greater noida') || l.includes('noida extension') || l.includes('noida west')) return 'Greater Noida';
   if (l.includes('noida') || l.includes('wish town') || l.includes('jaypee')) return 'Noida';
+  // Other metros (Navi Mumbai must be checked before Mumbai)
+  if (l.includes('navi mumbai') || l.includes('panvel')) return 'Navi Mumbai';
+  if (l.includes('mumbai')) return 'Mumbai';
+  if (l.includes('bangalore') || l.includes('bengaluru')) return 'Bangalore';
+  if (l.includes('hyderabad')) return 'Hyderabad';
+  if (l.includes('pune')) return 'Pune';
+  if (l.includes('ahmedabad')) return 'Ahmedabad';
+  if (l.includes('kolkata')) return 'Kolkata';
   // "Dwarka Expressway" (any abbreviation: exp / expwy / expressway) is a GURGAON corridor
   const isDwarkaExpwy = l.includes('dwarka') && /\bexp/.test(l);
   // Delhi — only the bare "Dwarka" sub-city (e.g., "Sector 23, Dwarka"), NOT the Gurgaon expressway
